@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# Lint and format-check the Python server before allowing a commit.
+cd "$(dirname "$0")/../server" || exit 1
+uv run ruff check .
+uv run ruff format --check .

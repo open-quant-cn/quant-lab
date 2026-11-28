@@ -1,0 +1,151 @@
+# quant-lab — Python data pipeline (uv · ruff · pytest · Polars · DuckDB/DuckLake)
+#
+# Design rule: ignore whole CATEGORIES (a directory or a file family), never single
+# files patched in one by one. When an untracked file shows up in `git status`, either
+# it belongs in git, or this file is missing a category — add the category.
+#
+# Deliberately NOT ignored, because both machines must agree on them:
+#   .python-version, uv.lock, tests/, docs/, deploy/
+
+# ---------------------------------------------------------------------------
+# Local working context (research notes, plans, scratch artifacts) — never in git
+# ---------------------------------------------------------------------------
+.context/
+
+# ---------------------------------------------------------------------------
+# Secrets
+# ---------------------------------------------------------------------------
+# All .env variants are ignored; .env.example is the only tracked template.
+.env*
+!.env.example
+
+# Private keys / certificates — never commit, no exceptions.
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+id_rsa*
+id_ed25519*
+.security-key
+
+# ---------------------------------------------------------------------------
+# Runtime data (regenerable or not, it never belongs in git)
+# ---------------------------------------------------------------------------
+# One configurable data root holds everything the code writes: settings, raw layer,
+# DuckLake catalog and Parquet files, app.db, logs. Its default location is data/
+# in the repo; only data/.keep is tracked so the directory exists after a clone.
+/data/*
+!/data/.keep
+
+# Binary stores and catalogs wherever they end up (DuckDB, DuckLake, SQLite).
+*.duckdb
+*.duckdb.wal
+*.ducklake
+*.ducklake.wal
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.db-wal
+*.db-shm
+
+# *.parquet / *.csv are intentionally NOT ignored globally: outside data/ they are
+# either test fixtures (belong in git) or a bug (should stay visible in git status).
+
+# Logs (including rotated files such as app.log.2026-11-26)
+*.log
+*.log.*
+
+# ---------------------------------------------------------------------------
+# Python bytecode and build output
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtual environments (.venv/ also carries its own .gitignore)
+.venv/
+/venv/
+/env/
+
+# ---------------------------------------------------------------------------
+# Node.js (repo-root tooling only: commitlint + husky)
+# ---------------------------------------------------------------------------
+node_modules/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
+# ---------------------------------------------------------------------------
+# Test, coverage and tool caches
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.hypothesis/
+.ruff_cache/
+.mypy_cache/
+
+# ---------------------------------------------------------------------------
+# Notebooks
+# ---------------------------------------------------------------------------
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Temporary files and editor backups
+# ---------------------------------------------------------------------------
+tmp/
+*.tmp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+
+# ---------------------------------------------------------------------------
+# OS / IDE (shared tool settings live in pyproject.toml, so .vscode/ stays local)
+# ---------------------------------------------------------------------------
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+
+# ---------------------------------------------------------------------------
+# AI coding tools — local state only.
+# Shareable rules live in AGENTS.md and in .claude/{skills,commands,workflows}.
+# ---------------------------------------------------------------------------
+.claude/*
+!.claude/skills/
+!.claude/commands/
+!.claude/workflows/
+.claude/skills/*-workspace/
+# Project-local Codex MCP configuration can contain personal access tokens.
+.codex/config.toml
+.worktrees/
+.auto-claude/
+.auto-claude-security.json
+.auto-claude-status
+.claude_settings.json
+.superpowers/
+.playwright-mcp/
+.codebuddy
+.conductor
+.kiro
+.workbuddy/
+.trae/
+# Continuity ledger: local/per-session context, not shared via git.
+CONTEXT.md

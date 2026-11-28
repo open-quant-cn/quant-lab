@@ -1,0 +1,6 @@
+# Machine-local settings. Copy to <data root>/config.toml (default: data/config.toml).
+# That file is gitignored; secrets such as the Tushare token go there, never here.
+
+[consumer]
+# Huey worker threads, i.e. how many tasks run at once.
+workers = 2
